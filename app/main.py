@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from app.routes import plants
 
 app = FastAPI(
     title="GardenHelper API",
@@ -6,6 +7,8 @@ app = FastAPI(
     version="0.1.0"
 )
 
-@app.get("/")
-def root():
-    return {"message": "Welcome to GardenHelper API"}
+app.include_router(plants.router)
+
+#@app.get("/")
+#def root():
+#    return {"message": "Welcome to GardenHelper API"}

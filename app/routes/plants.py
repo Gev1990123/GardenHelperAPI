@@ -77,13 +77,17 @@ async def upload_plants_csv(file: UploadFile = File(...)):
     decoded = content.decode("utf-8")
     reader = csv.DictReader(StringIO(decoded))
 
+    reader.fieldnames = [h.strip() for h in reader.fieldnames]
+
     plants_to_insert = []
     skipped_rows = []
 
     for idx, row in enumerate(reader, start=1):
+        clean_row = {k.strip(): v.strip() if isinstance(v, str) else v for k, v in row.items()}
+
         try:
             # Validate row
-            plant = Plant(**row)
+            plant = Plant(**clean_row)
             plant_dict = plant.dict(by_alias=True, exclude_none=True)
             plant_dict.pop("_id", None)
 
